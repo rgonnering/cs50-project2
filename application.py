@@ -17,22 +17,61 @@ login = LoginManager(app)
 Session(app)
 socketio = SocketIO(app, manage_session=False)
 
-users = {}
-rooms = {}
+users = ['anonymous']
+rooms = ['Open Forum']
+user = ''
 
 # default route ----------------------------
 @app.route("/")
 def index():
     #session.clear()
+    print("index")
     return render_template("index.html")
+
+# signin route ------------------------------
+@app.route('/signin')
+def signin():
+    print("signin")
+    return render_template("signin.html")
 
 # signup route ------------------------------
 @app.route('/signup', methods = ['POST'])
 def signup():
+    global users
+    global user
+    print('signup1: ', users, rooms)
     usern = request.form.get('name')
-    print ("login: ", usern)
+    print('signup1a: usern=', usern, "users=", users)
+    if usern:
+        print("su1")
+        if usern not in users:
+            
+            print("su2", users)
+            users.append(usern)
+            print("su3", users)
+    else:
+        usern = 'anonymous'
+        
     session['username'] = usern
-    return render_template("chatroom.html", username=usern)
+    user = usern
+    print ("signup2: user=", user, "usern=", usern, "users=",users, session['username'])
+    return render_template("chatroom.html", username=usern, users=users)
+
+# signout route ------------------------------
+@app.route('/signout')
+def signout():
+    global user
+    global users
+    msg = "You can continue as anonymous."
+    print("signout1 user=", user, "users=", users, rooms )
+    if user != 'anonymous':
+        users.remove(user)
+        msg = "You are signed out."
+        print(msg)
+    print(msg)
+    user = 'anonymous'
+    print("signout2 user=", user, "users=", users, rooms, msg )
+    return render_template("signout.html", username=user, msg=msg)
 
 # main -------------------------------------
 if __name__ == "__main__":

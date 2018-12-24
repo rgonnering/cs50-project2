@@ -1,0 +1,39 @@
+<!-- signin.html -->
+<!-- --------- -->
+{% extends "layout.html" %}
+
+{% block heading %}
+    Home
+    <nav>
+        <b style="float: left;">Chat Club</b>
+        <ul>
+            
+            <li><a href="/">Home</a></li>
+            <li>Sign In</li>
+            <li>Select Chat room</li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block body %}
+    <h1>Choose Username</h1>
+    <hr>
+
+    <form action="{{ url_for('signup') }}" method="post">
+        <div>
+            
+            <input type="submit" value="Sign in as Anonymous">
+        </div>
+    </form>
+    <br>
+    <hr>
+    <br>
+
+    <form action="{{ url_for('signup') }}" method="post">
+        <div>
+            <input name="name" type="text" placeholder="New User Name"><br>
+            <br>
+            <input type="submit" value="Sign in as a New User">
+        </div>
+    </form>
+{% endblock %}
