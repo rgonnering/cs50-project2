@@ -9,15 +9,46 @@
     <br>
 
 
-    <h1>Hi, {{username}}<br>
-        Hi, {{session['username']}}</h1>
+    <h1>Hi, {{session['username']}}</h1>
     <hr>
 
-    
-    <form action="/">
-        <div>
-            Do some chatroom stuff here.
-        </div>
-    </form>
+    <div class="a">
+        <form action="{{ url_for('chatroom') }}" method="post">
+
+            <table  class="table table-striped table-bordered table-hover" 
+                    style="width:60%;margin-left:20%;">
+                <thead>
+                    <tr>
+                        <th>Select</th>    <th>Chat Room</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chatroom in rooms %}
+                        <div>
+                        <tr>
+                            <td>
+                                <input type="radio" name="select" value="{{chatroom}}" />
+                            </td>                    
+                            <td>{{chatroom}}</td>
+                        </tr>
+                        </div>
+                        {% endfor %}
+                </tbody>
+            </table>  
+
+            <br>
+            <input type="submit" value="Select an existing Chat Room">
+        </form>
+    </div>
+    <br>
+    <div>
+        <form action="{{ url_for('chatroom') }}" method="post">
+        Create a new chatroom.
+        <input name="newChatRoom" type="text" cols="30" placeholder="My Chat Room">
+        <br><br>
+        <input type="submit" value="Create My Chatroom">
+        </form>
+    </div>
+
 {% endblock %}
         

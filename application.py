@@ -55,7 +55,8 @@ def signup():
     session['username'] = usern
     user = usern
     print ("signup2: user=", user, "usern=", usern, "users=",users, session['username'])
-    return render_template("chatroom.html", username=usern, users=users)
+    print ("signup3: rooms=", rooms)
+    return render_template("chatroom.html", username=usern, users=users, rooms=rooms)
 
 # signout route ------------------------------
 @app.route('/signout')
@@ -68,6 +69,44 @@ def signout():
         users.remove(user)
         msg = "You are signed out."
         print(msg)
+    print(msg)
+    user = 'anonymous'
+    print("signout2 user=", user, "users=", users, rooms, msg )
+    return render_template("signout.html", username=user, msg=msg)
+
+# chatroom ------------------------------
+@app.route('/chatroom', methods=['GET','POST'])
+def chatroom():
+    if request.method == 'POST':
+
+        # Selected Existing Chat Room
+        existingRoom = request.form.get("select")
+        newChatRoom = request.form.get('newChatRoom')
+        if existingRoom:
+            print ("chatroom1: rooms=", existingRoom, rooms)
+        elif newChatRoom:
+            rooms.append(newChatRoom)
+            print ("chatroom2: rooms=", newChatRoom, rooms)
+            
+
+    else:
+        print("chatroom3: rooms=", rooms)
+    return render_template("chatroom.html", users=users, rooms=rooms)
+
+
+# chat ----------------------------------
+@app.route('/chat')
+def chat():
+    print("chat: ")
+    #return render_template("chat.html")
+    return render_template("chat.html")
+
+# This is just for testing
+@app.route('/sign')
+def sign():
+    global user
+    global users
+    msg = "You can continue as anonymous."
     print(msg)
     user = 'anonymous'
     print("signout2 user=", user, "users=", users, rooms, msg )
