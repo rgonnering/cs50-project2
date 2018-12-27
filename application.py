@@ -19,7 +19,8 @@ socketio = SocketIO(app, manage_session=False)
 
 users = ['anonymous']
 rooms = ['Open Forum']
-user = ''
+user = 'anonymous'
+room = 'Open Forum'
 
 # default route ----------------------------
 @app.route("/")
@@ -31,8 +32,9 @@ def index():
 # signin route ------------------------------
 @app.route('/signin')
 def signin():
-    print("signin")
-    return render_template("signin.html")
+    global user
+    print("signin", user)
+    return render_template("signin.html", user=user)
 
 # signup route ------------------------------
 @app.route('/signup', methods = ['POST'])
@@ -55,8 +57,8 @@ def signup():
     session['username'] = usern
     user = usern
     print ("signup2: user=", user, "usern=", usern, "users=",users, session['username'])
-    print ("signup3: rooms=", rooms)
-    return render_template("chatroom.html", username=usern, users=users, rooms=rooms)
+    print ("signup3: rooms=", rooms, "room=", room)
+    return render_template("chatroom.html", user=user, room=room, users=users, rooms=rooms)
 
 # signout route ------------------------------
 @app.route('/signout')
@@ -77,29 +79,35 @@ def signout():
 # chatroom ------------------------------
 @app.route('/chatroom', methods=['GET','POST'])
 def chatroom():
+    global room
     if request.method == 'POST':
 
         # Selected Existing Chat Room
         existingRoom = request.form.get("select")
         newChatRoom = request.form.get('newChatRoom')
         if existingRoom:
+            chatroom = existingRoom
             print ("chatroom1: rooms=", existingRoom, rooms)
         elif newChatRoom:
             rooms.append(newChatRoom)
+            chatroom = newChatRoom
             print ("chatroom2: rooms=", newChatRoom, rooms)
-            
+        else:
+            chatroom = room
+            print ("chatroom3: chatroom=",  chatroom, " rooms=", rooms)
+        room =  chatroom
 
     else:
-        print("chatroom3: rooms=", rooms)
-    return render_template("chatroom.html", users=users, rooms=rooms)
+        print("chatroom4: chatroom=", room, " rooms=", rooms)
+    return render_template("chatroom.html", user=user, room=room, users=users, rooms=rooms)
 
 
 # chat ----------------------------------
 @app.route('/chat')
 def chat():
-    print("chat: ")
-    #return render_template("chat.html")
-    return render_template("chat.html")
+    print("chat: , user=", user, "chatroom=", room,)
+    msg = "Hi you all!"
+    return render_template("chat.html", user=user, room=room, msg=msg)
 
 # This is just for testing
 @app.route('/sign')

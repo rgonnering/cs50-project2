@@ -9,9 +9,7 @@
     <br>
 
 
-    <h1>Hi, {{session['username']}}</h1>
-    <hr>
-
+    <h1>Hi, {{user}}, You are currently in {{room}}.</h1>
     <div class="a">
         <form action="{{ url_for('chatroom') }}" method="post">
 

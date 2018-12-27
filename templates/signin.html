@@ -5,7 +5,8 @@
 
 
 {% block body %}
-    <h1>Choose Username</h1>
+    <h1>You are currently signed in as {{user}}.<br>
+    Choose Username</h1>
     <hr>
 
     <form action="{{ url_for('signup') }}" method="post">
