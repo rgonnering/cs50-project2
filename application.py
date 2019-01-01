@@ -103,22 +103,25 @@ def chatroom():
 
 
 # chat ----------------------------------
-@app.route('/chat')
+@app.route('/chat', methods=['GET', 'POST'])
 def chat():
-    print("chat: , user=", user, "chatroom=", room,)
-    msg = "Hi you all!"
-    return render_template("chat.html", user=user, room=room, msg=msg)
+    print("chat: user=", user, "room=", room,)
+    return render_template("chat.html", user=user, room=room)
+    #return render_template("chat.html", user=user, room=room, msg=msg)
 
-# This is just for testing
-@app.route('/sign')
-def sign():
-    global user
-    global users
-    msg = "You can continue as anonymous."
-    print(msg)
-    user = 'anonymous'
-    print("signout2 user=", user, "users=", users, rooms, msg )
-    return render_template("signout.html", username=user, msg=msg)
+
+#def messageReceived(methods=['GET', 'POST']):
+def messageReceived():
+    print ('message was received!!!')
+
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print('received my event: ' + str(json))
+    print("socketio.on: str(json) = ", str(json))
+    socketio.emit('my response', json, callback=messageReceived)
+
+
+
 
 # main -------------------------------------
 if __name__ == "__main__":
