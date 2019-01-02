@@ -106,7 +106,9 @@ def chatroom():
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
     print("chat: user=", user, "room=", room,)
-    return render_template("chat.html", user=user, room=room)
+    chatdata = {'username': user, 'chatroom': room}
+    print("chat2, data=", chatdata)
+    return render_template("chat.html", user=user, room=room, chatdata=chatdata)
     #return render_template("chat.html", user=user, room=room, msg=msg)
 
 

@@ -28,6 +28,18 @@ OR
     (flask) $ flask run --host=0.0.0.0
         browser: http://192.168.1.3:5000/
 
+git
+---
+(flask) $ git status
+(flask) $ git add .
+(flask) $ git status
+(flask) $ git commit -m "firstchat chat works"
+(flask) $ git push origin master
 
 
-
+passing a variable from python to javascript
+python:
+    return render_template("chat.html", user=user, room=room)
+javascript:
+    // variable needs back quote
+    var usern = `{{user}}

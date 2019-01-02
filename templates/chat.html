@@ -3,37 +3,60 @@
 {% extends "layout.html" %}
 
 {% block head %}
+ 
   <script type="text/javascript">
+    var x = "Hello World";
+    console.log(x);
+
+    var today = new Date();
+    console.log(today)
+
+    // variable needs back quote
+    var usern = `{{user}}`
+    //var usern = `{{chatdata.username}}`   // this works too
+    console.log("username:", usern)
+
+    // var chatroom = `{{room}}`
+    var chatroom = `{{chatdata.chatroom}}`   // this works too
+    console.log("chatroom:", chatroom)
+
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on( 'connect', function() {
-      socket.emit( 'my event', {
-        data: 'User Connected' } )
+      socket.emit( 'my event', { data: 'User Connected' } )
 
       var form = $( 'form' ).on( 'submit', function( e ) {
         e.preventDefault()
         let user_name = $( 'input.username' ).val()
+        console.log("User: ", user_name)
         let user_input = $( 'input.message' ).val()
+
         socket.emit( 'my event', {
           user_name : user_name,
           message : user_input    
         } )
+        
         $( 'input.message' ).val( '' ).focus()
       } )
     } )
+
     socket.on( 'my response', function( msg ) {
-      console.log( msg )
-      $( 'h3' ).remove()
-      $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+
-            '</b> '+msg.message+'</div>' )
+      console.log( "msg:", msg )
+      //console.log( "msg.data:", msg.data )
+      if (msg.data !== 'User Connected') {
+        $( 'h3' ).remove()
+        $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+      }
     })
   </script>
 {% endblock %}
 
 {% block body %}
-  <h1>Hi, {{user}}, You are currently in {{room}}.</h1>
-  <hr>
 
+  <h1>Hi, {{user}}, You are currently in {{room}}.</h1>
+  <div id="chatData">{{chatdata}}</div>
+  <hr>
+  {{today}}
   <h1>{{msg}}</h1>
   <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
   <div class="message_holder"></div>
