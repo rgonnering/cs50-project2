@@ -25,7 +25,12 @@ room = 'Open Forum'
 # default route ----------------------------
 @app.route("/")
 def index():
-    #session.clear()
+    # session.clear
+    global users, rooms, user, room
+    users = ['anonymous']
+    rooms = ['Open Forum']
+    user = 'anonymous'
+    room = 'Open Forum'
     print("index")
     return render_template("index.html")
 

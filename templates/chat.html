@@ -8,8 +8,10 @@
     var x = "Hello World";
     console.log(x);
 
-    var today = new Date();
-    console.log(today)
+    var date = new Date().toDateString();
+    console.log("Date:", date)
+    var time = new Date().toLocaleTimeString();
+    console.log("Time:", time)
 
     // variable needs back quote
     var usern = `{{user}}`
@@ -20,6 +22,14 @@
     var chatroom = `{{chatdata.chatroom}}`   // this works too
     console.log("chatroom:", chatroom)
 
+    // splice
+    myArray = []
+    console.log("myArray=",myArray)
+    myArray.splice(0,0,"time1")
+    console.log("myArray=",myArray)
+    myArray.push("time2")
+    console.log("myArray=",myArray)
+
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on( 'connect', function() {
@@ -27,16 +37,25 @@
 
       var form = $( 'form' ).on( 'submit', function( e ) {
         e.preventDefault()
-        let user_name = $( 'input.username' ).val()
-        console.log("User: ", user_name)
-        let user_input = $( 'input.message' ).val()
+        //let user_name = $( 'input.username' ).val()
+        let user_name = usern
+        let chat_room = chatroom
+        //let user_input = $( 'input.message' ).val()
+        //console.log("form: message", user_input)
+
+        let user_text = $( 'textarea.myTextarea' ).val()   
+        console.log("form: textarea", user_text)             
+        //alert(user_text)
 
         socket.emit( 'my event', {
           user_name : user_name,
-          message : user_input    
+          //message : user_input,
+          message : user_text,
+          chat_room : chat_room   
         } )
         
-        $( 'input.message' ).val( '' ).focus()
+        //$( 'input.message' ).val( '' ).focus()
+        $( 'textarea.myTextarea' ).val( '' ).focus()
       } )
     } )
 
@@ -45,7 +64,15 @@
       //console.log( "msg.data:", msg.data )
       if (msg.data !== 'User Connected') {
         $( 'h3' ).remove()
-        $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+        //$( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> - '+msg.message+ ' - ' +msg.chat_room+'</div>' )
+
+        var newItem = document.createElement("LI");
+        //var textnode = document.createTextNode(msg.message);
+        var textnode = document.createTextNode(msg.user_name+' - '+date+' - '+time+' - '+msg.message);
+        newItem.appendChild(textnode);
+        var list = document.getElementById("myList");
+        list.insertBefore(newItem, list.childNodes[0])
+
       }
     })
   </script>
@@ -53,17 +80,21 @@
 
 {% block body %}
 
-  <h1>Hi, {{user}}, You are currently in {{room}}.</h1>
+  <h1>Hi, {{user}}, You are currently in {{room}} chatroom.</h1>
   <div id="chatData">{{chatdata}}</div>
   <hr>
   {{today}}
   <h1>{{msg}}</h1>
   <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
-  <div class="message_holder"></div>
+
+  <textarea type="text" class="myTextarea"  rows="3" cols="50" form="" placeholder="Messages">
+  </textarea>
 
   <form action="" method="POST">
-    <input type="text" class="username" placeholder="User Name"/>
-    <input type="text" class="message" placeholder="Messages"/>
     <input type="submit"/>
   </form>   
+  
+  <ul id="myList">
+  </ul>
+  
 {% endblock %}
