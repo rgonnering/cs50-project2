@@ -108,16 +108,20 @@ section.content p {
 
 
 /* *********** Bootstrap Table Overrides ************* */
-.table th {
+#myTable th {
 background-color: rgb(245, 175, 69);
-border: 2px;
-border-color: black;
+border: 1px solid black;
 }
 
-.table tr:nth-child(even) {background-color: cyan !important;}
-.table tr:nth-child(odd) {background-color: yellow !important;}
-.table tr:hover {background-color: rgb(211, 177, 241) !important;}
+#myTable td {
+    border: 1px solid black;
+}
+#myTable tr:nth-child(even) {background-color: cyan !important;}
+#myTable tr:nth-child(odd) {background-color: yellow !important;}
+#myTable tr:hover {background-color: rgb(211, 177, 241) !important;}
 
-.table .table-bordered {
+#myTable  {
 border: 3px solid black;
+margin-left: 10%;
+margin-right: 10%;
 }

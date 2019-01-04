@@ -8,7 +8,9 @@
     var x = "Hello World";
     console.log(x);
 
-    var date = new Date().toDateString();
+    var now = new Date();
+    console.log("Now:", now)    
+    var date = now.toDateString();
     console.log("Date:", date)
     var time = new Date().toLocaleTimeString();
     console.log("Time:", time)
@@ -21,14 +23,6 @@
     // var chatroom = `{{room}}`
     var chatroom = `{{chatdata.chatroom}}`   // this works too
     console.log("chatroom:", chatroom)
-
-    // splice
-    myArray = []
-    console.log("myArray=",myArray)
-    myArray.splice(0,0,"time1")
-    console.log("myArray=",myArray)
-    myArray.push("time2")
-    console.log("myArray=",myArray)
 
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
@@ -66,12 +60,27 @@
         $( 'h3' ).remove()
         //$( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> - '+msg.message+ ' - ' +msg.chat_room+'</div>' )
 
+        /*
         var newItem = document.createElement("LI");
-        //var textnode = document.createTextNode(msg.message);
         var textnode = document.createTextNode(msg.user_name+' - '+date+' - '+time+' - '+msg.message);
         newItem.appendChild(textnode);
         var list = document.getElementById("myList");
         list.insertBefore(newItem, list.childNodes[0])
+
+          <ul id="myList"> </ul>
+        */
+
+
+        var table = document.getElementById("myTable");
+        var row = table.insertRow(1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        cell1.innerHTML = msg.user_name;
+        cell2.innerHTML = date;
+        cell3.innerHTML = time;
+        cell4.innerHTML =msg.message;
 
       }
     })
@@ -80,21 +89,27 @@
 
 {% block body %}
 
-  <h1>Hi, {{user}}, You are currently in {{room}} chatroom.</h1>
-  <div id="chatData">{{chatdata}}</div>
+  <h1>{{user}} is in the {{room}} chatroom.</h1>
   <hr>
-  {{today}}
+  {{now}}
   <h1>{{msg}}</h1>
   <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
-
+  </br>
   <textarea type="text" class="myTextarea"  rows="3" cols="50" form="" placeholder="Messages">
   </textarea>
-
   <form action="" method="POST">
     <input type="submit"/>
   </form>   
-  
-  <ul id="myList">
-  </ul>
+  </br>
+  <table id="myTable">
+    <tr>
+      <th>User</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Message</th>
+    </tr>
+    <tr>
+    </tr>
+  </table>
   
 {% endblock %}
