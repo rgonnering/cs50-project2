@@ -3,8 +3,7 @@
 {% extends "layout.html" %}
 
 {% block head %}
- 
-  <script type="text/javascript">
+   <script type="text/javascript">
     var x = "Hello World";
     console.log(x);
 
@@ -59,7 +58,6 @@
       if (msg.data !== 'User Connected') {
         $( 'h3' ).remove()
         //$( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> - '+msg.message+ ' - ' +msg.chat_room+'</div>' )
-
         /*
         var newItem = document.createElement("LI");
         var textnode = document.createTextNode(msg.user_name+' - '+date+' - '+time+' - '+msg.message);
@@ -69,7 +67,6 @@
 
           <ul id="myList"> </ul>
         */
-
 
         var table = document.getElementById("myTable");
         var row = table.insertRow(1);
@@ -81,7 +78,6 @@
         cell2.innerHTML = date;
         cell3.innerHTML = time;
         cell4.innerHTML =msg.message;
-
       }
     })
   </script>

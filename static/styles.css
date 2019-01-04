@@ -108,6 +108,22 @@ section.content p {
 
 
 /* *********** Bootstrap Table Overrides ************* */
+.table th {
+	background-color: rgb(245, 175, 69);
+	border: 2px;
+	border-color: black;
+}
+
+.table tr:nth-child(even) {background-color: cyan !important;}
+.table tr:nth-child(odd) {background-color: yellow !important;}
+.table tr:hover {background-color: rgb(211, 177, 241) !important;}
+
+.table .table-bordered {
+	border: 3px solid black;
+}
+
+
+/* *********** Chat Table ************* */
 #myTable th {
 background-color: rgb(245, 175, 69);
 border: 1px solid black;
