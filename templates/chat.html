@@ -8,19 +8,16 @@
     console.log(x);
 
     var now = new Date();
-    console.log("Now:", now)    
+    console.log("Now:", now)  ;  
     var date = now.toDateString();
-    console.log("Date:", date)
+    console.log("Date:", date);
     var time = new Date().toLocaleTimeString();
-    console.log("Time:", time)
+    console.log("Time:", time);
 
-    // variable needs back quote
-    var usern = `{{user}}`
-    //var usern = `{{chatdata.username}}`   // this works too
-    console.log("username:", usern)
-
-    // var chatroom = `{{room}}`
-    var chatroom = `{{chatdata.chatroom}}`   // this works too
+    // variables from python need back quotes
+    var user = `{{user}}`;
+    console.log("username:", user);
+    var chatroom = `{{chatroom}}`
     console.log("chatroom:", chatroom)
 
     var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -31,7 +28,7 @@
       var form = $( 'form' ).on( 'submit', function( e ) {
         e.preventDefault()
         //let user_name = $( 'input.username' ).val()
-        let user_name = usern
+        let user_name = user
         let chat_room = chatroom
         //let user_input = $( 'input.message' ).val()
         //console.log("form: message", user_input)
@@ -57,17 +54,6 @@
       //console.log( "msg.data:", msg.data )
       if (msg.data !== 'User Connected') {
         $( 'h3' ).remove()
-        //$( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> - '+msg.message+ ' - ' +msg.chat_room+'</div>' )
-        /*
-        var newItem = document.createElement("LI");
-        var textnode = document.createTextNode(msg.user_name+' - '+date+' - '+time+' - '+msg.message);
-        newItem.appendChild(textnode);
-        var list = document.getElementById("myList");
-        list.insertBefore(newItem, list.childNodes[0])
-
-          <ul id="myList"> </ul>
-        */
-
         var table = document.getElementById("myTable");
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);
@@ -77,25 +63,27 @@
         cell1.innerHTML = msg.user_name;
         cell2.innerHTML = date;
         cell3.innerHTML = time;
-        cell4.innerHTML =msg.message;
+        cell4.innerHTML = msg.message;
       }
-    })
+    })            
   </script>
 {% endblock %}
 
 {% block body %}
 
-  <h1>{{user}} is in the {{room}} chatroom.</h1>
+  <h1>{{user}} is in the {{session['chatroom']}} chatroom. - {{session['username']}}</h1>
   <hr>
   {{now}}
   <h1>{{msg}}</h1>
   <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
   </br>
+
   <textarea type="text" class="myTextarea"  rows="3" cols="50" form="" placeholder="Messages">
   </textarea>
   <form action="" method="POST">
     <input type="submit"/>
   </form>   
+  
   </br>
   <table id="myTable">
     <tr>

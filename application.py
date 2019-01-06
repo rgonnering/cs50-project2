@@ -19,32 +19,44 @@ socketio = SocketIO(app, manage_session=False)
 
 users = ['anonymous']
 rooms = ['Open Forum']
-user = 'anonymous'
-room = 'Open Forum'
+user = {"username": 'anonymous', "chatroom": "Open Forum"}
+
+if session:
+    print("session")
+    if 'username'  in session:
+        print("username")
+        usern = session['username']
+        room = session['chatroom']
+        user = {"username": usern, "chatroom": room}   
+print("Initialize: user=", user['username'], "room=", user['chatroom'])   
 
 # default route ----------------------------
 @app.route("/")
 def index():
     # session.clear
     global users, rooms, user, room
-    users = ['anonymous']
-    rooms = ['Open Forum']
-    user = 'anonymous'
-    room = 'Open Forum'
-    print("index")
+    if 'username' not in session:
+        usern = user['username']
+        room = user['chatroom']
+        session['username'] = usern
+        session['chatroom'] = room
+    else:
+        usern = session['username']
+        room = session['chatroom']
+    print("index2: user:", usern, session['username'], "room:", room, session['chatroom'])
     return render_template("index.html")
 
 # signin route ------------------------------
 @app.route('/signin')
 def signin():
-    global user
-    print("signin", user)
-    return render_template("signin.html", user=user)
+    usern = session['username']
+    print("signin", usern)
+    return render_template("signin.html", user=usern)
 
 # signup route ------------------------------
 @app.route('/signup', methods = ['POST'])
 def signup():
-    global users
+    global users, rooms
     global user
     print('signup1: ', users, rooms)
     usern = request.form.get('name')
@@ -52,7 +64,6 @@ def signup():
     if usern:
         print("su1")
         if usern not in users:
-            
             print("su2", users)
             users.append(usern)
             print("su3", users)
@@ -61,7 +72,8 @@ def signup():
         
     session['username'] = usern
     user = usern
-    print ("signup2: user=", user, "usern=", usern, "users=",users, session['username'])
+    room = session['chatroom']
+    print ("signup2: usern=", usern, "users=",users, session['username'])
     print ("signup3: rooms=", rooms, "room=", room)
     return render_template("chatroom.html", user=user, room=room, users=users, rooms=rooms)
 
@@ -69,24 +81,26 @@ def signup():
 @app.route('/signout')
 def signout():
     global user
-    global users
+    user = session['username']
+
     msg = "You can continue as anonymous."
-    print("signout1 user=", user, "users=", users, rooms )
+    print("signout1 user=", user, "users=", users, "rooms=", rooms )
     if user != 'anonymous':
         users.remove(user)
         msg = "You are signed out."
         print(msg)
-    print(msg)
-    user = 'anonymous'
-    print("signout2 user=", user, "users=", users, rooms, msg )
+
+    usern = 'anonymous'
+    session['username'] = usern
+    print("signout2 user=", usern, "users=", users, rooms, msg )
     return render_template("signout.html", username=user, msg=msg)
 
 # chatroom ------------------------------
 @app.route('/chatroom', methods=['GET','POST'])
 def chatroom():
-    global room
+    global rooms, users, user
+    chatroom = session['chatroom']
     if request.method == 'POST':
-
         # Selected Existing Chat Room
         existingRoom = request.form.get("select")
         newChatRoom = request.form.get('newChatRoom')
@@ -97,23 +111,23 @@ def chatroom():
             rooms.append(newChatRoom)
             chatroom = newChatRoom
             print ("chatroom2: rooms=", newChatRoom, rooms)
-        else:
-            chatroom = room
-            print ("chatroom3: chatroom=",  chatroom, " rooms=", rooms)
-        room =  chatroom
 
-    else:
-        print("chatroom4: chatroom=", room, " rooms=", rooms)
-    return render_template("chatroom.html", user=user, room=room, users=users, rooms=rooms)
+
+    usern = session['username']
+    room =  chatroom
+    session['chatroom'] = room
+    print("chatroom4: chatroom=", room, " rooms=", rooms)
+    return render_template("chatroom.html", user=usern, room=room, users=users, rooms=rooms)
 
 
 # chat ----------------------------------
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
-    print("chat: user=", user, "room=", room,)
-    chatdata = {'username': user, 'chatroom': room}
-    print("chat2, data=", chatdata)
-    return render_template("chat.html", user=user, room=room, chatdata=chatdata)
+    usern = session['username']
+    room = session['chatroom']
+    print("chat: user=", usern, "room=", room,)
+
+    return render_template("chat.html", user=usern, chatroom=room)
     #return render_template("chat.html", user=user, room=room, msg=msg)
 
 
