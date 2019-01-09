@@ -32,12 +32,12 @@
                         {% endfor %}
                 </tbody>
             </table>  
-
             <br>
             <input type="submit" value="Select an existing Chat Room">
         </form>
     </div>
     <br>
+
     <div>
         <form action="{{ url_for('chatroom') }}" method="post">
         Create a new chatroom.
@@ -46,6 +46,5 @@
         <input type="submit" value="Create My Chatroom">
         </form>
     </div>
-
 {% endblock %}
         
